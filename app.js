@@ -12,6 +12,7 @@ var logger = require('morgan');
 
 var customers = require('./routes/customers');
 var indexRouter = require('./routes/index');
+var item = require('./routes/item');
 var usersRouter = require('./routes/users');
 
 var connection = require('express-myconnection');
@@ -51,6 +52,7 @@ app.use(
 
 app.use('/', indexRouter);
 app.use('/customers', customers);
+app.use('/item', item);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler

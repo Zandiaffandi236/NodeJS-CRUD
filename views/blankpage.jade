@@ -2,7 +2,7 @@ extends layout/base
 block content
     section.content-header
         h1
-            | Blank Page
+            | Admin Page
             small it all starts here
         ol.breadcrumb
             li
@@ -14,13 +14,15 @@ block content
         .box
             .box-header.with-border
                 h3.box-title
-                    | Title
+                    | Admin Page
                 .box-tools.pull-right
                     button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
                         i.fa.fa-minus
-                    button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
-                        i.fa.fa-times
             .box-body
-                | Start Creating your Amazing Application!
-            .box-footer
-                | Footer
+                | List Data :
+                a(href='/customers')
+                    .box-body
+                        | Customers
+                a(href='/item')
+                    .box-body
+                        | Items

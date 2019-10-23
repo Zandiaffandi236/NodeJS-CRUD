@@ -109,6 +109,7 @@ router.get('/edit/(:id)', function(req,res,next){
         });
     });
 });
+
 router.put('/edit/(:id)', function(req,res,next){
     req.assert('name', 'Please fill the name').notEmpty();
     var errors = req.validationErrors();
