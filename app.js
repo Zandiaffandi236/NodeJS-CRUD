@@ -14,6 +14,7 @@ var customers = require('./routes/customers');
 var indexRouter = require('./routes/index');
 var item = require('./routes/item');
 var usersRouter = require('./routes/users');
+var supplier = require('./routes/supplier');
 
 var connection = require('express-myconnection');
 var mysql = require('mysql');
@@ -53,6 +54,7 @@ app.use(
 app.use('/', indexRouter);
 app.use('/customers', customers);
 app.use('/item', item);
+app.use('/supplier', supplier);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler

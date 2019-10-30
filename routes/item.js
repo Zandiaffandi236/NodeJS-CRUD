@@ -163,7 +163,7 @@ router.put('/editItem/(:id)', function(req,res,next){
                     });
                 }else{
                     req.flash('msg_info', 'Update Item success'); 
-                    res.redirect('/item/editItem/'+req.params.id);
+                    res.redirect('/item'); 
                 }		
             });
         });
