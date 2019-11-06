@@ -89,7 +89,7 @@ router.get('/edit/(:id)', function(req,res,next){
             if(err)
             {
                 var errornya  = ("Error Selecting : %s ",err );  
-                req.flash('msg_error', errors_detail); 
+                req.flash('msg_error', errornya); 
                 res.redirect('/customers'); 
             }else
             {
