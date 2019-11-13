@@ -1,18 +1,20 @@
 var express = require('express');
+var Auth_mdl = require('../middlewares/authentication');
+var session_store;
 var router = express.Router();
 
-router.get('/', function(req, res, next) {
+router.get('/', Auth_mdl.is_login , function(req, res, next) {
     req.getConnection(function(err, connection) {
         var query = connection.query('SELECT * FROM item', function(err, rows) {
             if (err)
                 var errornya = ('Error Selecting : %s', err);
                 req.flash('msg_error', errornya);
-                res.render('item/list-item', {title: 'Customers', data:rows});
+                res.render('item/list-item', {title: 'Customers', data:rows,session_store: req.session});
         });
     });
 });
 
-router.get('/addItem', function(req, res, next) {
+router.get('/addItem', Auth_mdl.is_login , function(req, res, next) {
     res.render(	'item/add-item', 
     { 
         title: 'Add New Item',
@@ -22,10 +24,11 @@ router.get('/addItem', function(req, res, next) {
         unit:'',
         total:'',
         price:'',
+        session_store: req.session,
     });
 });
 
-router.post('/addItem', function(req, res, next) {
+router.post('/addItem', Auth_mdl.is_login , function(req, res, next) {
     req.assert('itemcode', 'Please fill the item code').notEmpty();
     req.assert('name', 'Please fill the name').notEmpty();
     req.assert('brand', 'Please fill the brand').notEmpty();
@@ -66,6 +69,7 @@ router.post('/addItem', function(req, res, next) {
                         unit: req.param('unit'),
                         total: req.param('total'),
                         price: req.param('price'),
+                        session_store: req.session,
                     });
                 }else{
                     req.flash('msg_info', 'Create Item success'); 
@@ -92,7 +96,7 @@ router.post('/addItem', function(req, res, next) {
 
 });
 
-router.get('/editItem/(:id)', function(req,res,next){
+router.get('/editItem/(:id)', Auth_mdl.is_login , function(req,res,next){
     req.getConnection(function(err,connection){
         var query = connection.query('SELECT * FROM item where id='+req.params.id,function(err,rows)
         {
@@ -111,7 +115,7 @@ router.get('/editItem/(:id)', function(req,res,next){
                 else
                 {	
                     console.log(rows);
-                    res.render('item/edit-item',{title:"Edit ",data:rows[0]});
+                    res.render('item/edit-item',{title:"Edit ",data:rows[0],session_store: req.session});
 
                 }
             }
@@ -120,7 +124,7 @@ router.get('/editItem/(:id)', function(req,res,next){
     });
 });
 
-router.put('/editItem/(:id)', function(req,res,next){
+router.put('/editItem/(:id)', Auth_mdl.is_login , function(req,res,next){
     req.assert('itemcode', 'Please fill the item code').notEmpty();
     req.assert('name', 'Please fill the name').notEmpty();
     req.assert('brand', 'Please fill the brand').notEmpty();
@@ -186,7 +190,7 @@ router.put('/editItem/(:id)', function(req,res,next){
     }
 });
 
-router.delete('/deleteItem/(:id)', function(req, res, next) {
+router.delete('/deleteItem/(:id)', Auth_mdl.is_login , function(req, res, next) {
 	req.getConnection(function(err,connection){
 		var item = {
 			id: req.params.id,

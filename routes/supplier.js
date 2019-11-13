@@ -1,18 +1,20 @@
 var express = require('express');
+var Auth_mdl = require('../middlewares/authentication');
+var session_store;
 var router = express.Router();
 
-router.get('/', function(req, res, next) {
+router.get('/', Auth_mdl.is_login , function(req, res, next) {
     req.getConnection(function(err, connection) {
         var query = connection.query('SELECT * FROM supplier', function(err, rows) {
             if (err)
                 var errornya = ('Error Selecting : %s', err);
                 req.flash('msg_error', errornya);
-                res.render('supplier/list-supplier', {title: 'Supplier', data:rows});
+                res.render('supplier/list-supplier', {title: 'Supplier', data:rows,session_store: req.session});
         });
     });
 });
 
-router.get('/addSupplier', function(req, res, next) {
+router.get('/addSupplier', Auth_mdl.is_login , function(req, res, next) {
     res.render(	'supplier/add-supplier', 
     { 
         title: 'Add New Supplier',
@@ -21,10 +23,11 @@ router.get('/addSupplier', function(req, res, next) {
         address: '',
         email:'',
         phone:'',
+        session_store: req.session,
     });
 });
 
-router.post('/addSupplier', function(req, res, next) {
+router.post('/addSupplier', Auth_mdl.is_login , function(req, res, next) {
     req.assert('suppliercode', 'Please fill the supplier code').notEmpty();
     req.assert('name', 'Please fill the name').notEmpty();
     req.assert('address', 'Please fill the address').notEmpty();
@@ -61,6 +64,7 @@ router.post('/addSupplier', function(req, res, next) {
                         address: req.param('address'),
                         email: req.param('email'),
                         phone: req.param('phone'),
+                        session_store: req.session,
                     });
                 }else{
                     req.flash('msg_info', 'Create Supplier success'); 
@@ -81,13 +85,14 @@ router.post('/addSupplier', function(req, res, next) {
         res.render('suppiler/add-supplier', 
         { 
             itemcode: req.param('suppliercode'),
-            name: req.param('name'), 
+            name: req.param('name'),
+            session_store: req.session,
         });
     }
 
 });
 
-router.get('/editSupplier/(:id)', function(req,res,next){
+router.get('/editSupplier/(:id)', Auth_mdl.is_login , function(req,res,next){
     req.getConnection(function(err,connection){
         var query = connection.query('SELECT * FROM supplier where id='+req.params.id,function(err,rows)
         {
@@ -106,7 +111,7 @@ router.get('/editSupplier/(:id)', function(req,res,next){
                 else
                 {	
                     console.log(rows);
-                    res.render('supplier/edit-supplier',{title:"Edit ",data:rows[0]});
+                    res.render('supplier/edit-supplier',{title:"Edit ",data:rows[0],session_store: req.session});
 
                 }
             }
@@ -115,7 +120,7 @@ router.get('/editSupplier/(:id)', function(req,res,next){
     });
 });
 
-router.put('/editSupplier/(:id)', function(req,res,next){
+router.put('/editSupplier/(:id)', Auth_mdl.is_login , function(req,res,next){
     req.assert('suppliercode', 'Please fill the supplier code').notEmpty();
     req.assert('name', 'Please fill the name').notEmpty();
     req.assert('address', 'Please fill the address').notEmpty();
